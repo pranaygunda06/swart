@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
-import { auth, db } from "@/lib/firebase/client";
+import { getClientAuth, getClientDb } from "@/lib/firebase/client";
 import toast from "react-hot-toast";
 import { ShoppingBag } from "lucide-react";
 
@@ -24,6 +24,8 @@ function SignupForm() {
     e.preventDefault();
     setLoading(true);
     try {
+      const auth = getClientAuth();
+      const db = getClientDb();
       const cred = await createUserWithEmailAndPassword(auth, email, password);
       const uid = cred.user.uid;
 

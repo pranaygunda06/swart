@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "@/lib/firebase/client";
+import { getClientAuth } from "@/lib/firebase/client";
 import { useRouter } from "next/navigation";
 import {
   Search,
@@ -21,6 +21,7 @@ export default function CustomerHome() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const auth = getClientAuth();
     const unsub = onAuthStateChanged(auth, (u) => {
       if (!u) {
         router.push("/auth/login");
@@ -42,7 +43,6 @@ export default function CustomerHome() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
-      {/* Top bar */}
       <header className="bg-white border-b sticky top-0 z-40">
         <div className="max-w-lg mx-auto px-4 py-3 flex items-center gap-3">
           <div className="flex-1">
@@ -53,14 +53,13 @@ export default function CustomerHome() {
             <p className="text-sm font-semibold truncate">Set your location</p>
           </div>
           <button
-            onClick={() => signOut(auth)}
+            onClick={() => signOut(getClientAuth())}
             className="p-2 rounded-full hover:bg-gray-100"
           >
             <User className="w-5 h-5 text-gray-600" />
           </button>
         </div>
 
-        {/* Search */}
         <div className="px-4 pb-3">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -74,7 +73,6 @@ export default function CustomerHome() {
       </header>
 
       <main className="max-w-lg mx-auto px-4 py-4 space-y-6">
-        {/* Categories */}
         <section>
           <h2 className="font-semibold mb-3">Categories</h2>
           <div className="grid grid-cols-4 gap-3">
@@ -90,7 +88,6 @@ export default function CustomerHome() {
           </div>
         </section>
 
-        {/* Nearby stores */}
         <section>
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-semibold">Nearby Stores</h2>
@@ -122,7 +119,6 @@ export default function CustomerHome() {
           </div>
         </section>
 
-        {/* Popular */}
         <section>
           <h2 className="font-semibold mb-3">Popular near you</h2>
           <div className="grid grid-cols-2 gap-3">
@@ -142,7 +138,6 @@ export default function CustomerHome() {
         </section>
       </main>
 
-      {/* Bottom nav */}
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t">
         <div className="max-w-lg mx-auto flex">
           {[

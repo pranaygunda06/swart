@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "@/lib/firebase/client";
+import { getClientAuth } from "@/lib/firebase/client";
 import { useRouter } from "next/navigation";
 import {
   LayoutDashboard,
@@ -28,13 +28,12 @@ const nav = [
 
 export default function VendorDashboard() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const auth = getClientAuth();
     const unsub = onAuthStateChanged(auth, (u) => {
       if (!u) router.push("/auth/login");
-      else setUser(u);
       setLoading(false);
     });
     return () => unsub();
@@ -50,7 +49,6 @@ export default function VendorDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
-      {/* Sidebar */}
       <aside className="w-56 bg-white border-r hidden md:flex flex-col">
         <div className="p-4 border-b">
           <div className="flex items-center gap-2">
@@ -74,7 +72,7 @@ export default function VendorDashboard() {
         </nav>
         <div className="p-3 border-t">
           <button
-            onClick={() => signOut(auth)}
+            onClick={() => signOut(getClientAuth())}
             className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 w-full"
           >
             <LogOut className="w-4 h-4" />
@@ -83,7 +81,6 @@ export default function VendorDashboard() {
         </div>
       </aside>
 
-      {/* Main */}
       <main className="flex-1 p-6">
         <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
 

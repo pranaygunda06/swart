@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/firebase/client";
+import { getClientAuth } from "@/lib/firebase/client";
 import toast from "react-hot-toast";
 import { ShoppingBag } from "lucide-react";
 
@@ -18,6 +18,7 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     try {
+      const auth = getClientAuth();
       await signInWithEmailAndPassword(auth, email, password);
       toast.success("Welcome back!");
       router.push("/home");
