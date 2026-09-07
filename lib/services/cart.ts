@@ -12,9 +12,10 @@ import {
   getDocs,
   serverTimestamp,
 } from "firebase/firestore";
-import { db } from "@/lib/firebase/client";
+import { getClientDb } from "@/lib/firebase/client";
 
 export async function getCart(customerId: string) {
+  const db = getClientDb();
   const cartRef = doc(db, "carts", customerId);
   const snap = await getDoc(cartRef);
   if (!snap.exists()) return null;
@@ -26,17 +27,19 @@ export async function addToCart(
   storeId: string,
   item: { storeProductId: string; productId: string; quantity: number }
 ) {
+  const db = getClientDb();
   const cartRef = doc(db, "carts", customerId);
   const cartSnap = await getDoc(cartRef);
 
   if (cartSnap.exists()) {
     const data = cartSnap.data();
     if (data.storeId && data.storeId !== storeId) {
-      throw new Error("ONE_STORE_CART: Clear cart or switch store before adding items from another store.");
+      throw new Error(
+        "ONE_STORE_CART: Clear cart or switch store before adding items from another store."
+      );
     }
   }
 
-  // Ensure cart exists
   await setDoc(
     cartRef,
     {
@@ -48,7 +51,6 @@ export async function addToCart(
     { merge: true }
   );
 
-  // Add / update item
   const itemsRef = collection(db, "carts", customerId, "items");
   await addDoc(itemsRef, {
     ...item,
@@ -58,6 +60,7 @@ export async function addToCart(
 }
 
 export async function clearCart(customerId: string) {
+  const db = getClientDb();
   const itemsRef = collection(db, "carts", customerId, "items");
   const snap = await getDocs(itemsRef);
   await Promise.all(snap.docs.map((d) => deleteDoc(d.ref)));
