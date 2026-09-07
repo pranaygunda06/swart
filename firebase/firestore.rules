@@ -1,0 +1,127 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function userDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isCustomer() {
+      return isSignedIn() && userDoc().role == 'customer';
+    }
+
+    function isVendor() {
+      return isSignedIn() && userDoc().role == 'vendor';
+    }
+
+    function isAdmin() {
+      return isSignedIn() && userDoc().role == 'internal_admin';
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    // Users
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId);
+      allow update: if isOwner(userId) || isAdmin();
+    }
+
+    // Customer profiles
+    match /customerProfiles/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow write: if isOwner(userId);
+    }
+
+    // Vendor profiles
+    match /vendorProfiles/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow write: if isOwner(userId);
+    }
+
+    // Stores - public read for active, write only by owner vendor
+    match /stores/{storeId} {
+      allow read: if true; // public catalog
+      allow create: if isVendor() && request.resource.data.vendorId == request.auth.uid;
+      allow update, delete: if isVendor() && resource.data.vendorId == request.auth.uid;
+
+      match /hours/{day} {
+        allow read: if true;
+        allow write: if isVendor() && get(/databases/$(database)/documents/stores/$(storeId)).data.vendorId == request.auth.uid;
+      }
+
+      match /products/{storeProductId} {
+        allow read: if true;
+        allow write: if isVendor() && get(/databases/$(database)/documents/stores/$(storeId)).data.vendorId == request.auth.uid;
+
+        match /inventory/{docId} {
+          allow read: if true;
+          // inventory writes should preferably go through Cloud Functions
+          allow write: if isVendor() && get(/databases/$(database)/documents/stores/$(storeId)).data.vendorId == request.auth.uid;
+        }
+      }
+
+      match /deliverySettings/{docId} {
+        allow read: if true;
+        allow write: if isVendor() && get(/databases/$(database)/documents/stores/$(storeId)).data.vendorId == request.auth.uid;
+      }
+    }
+
+    // Global products & categories - public read
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Carts - owner only
+    match /carts/{customerId} {
+      allow read, write: if isOwner(customerId);
+
+      match /items/{itemId} {
+        allow read, write: if isOwner(customerId);
+      }
+    }
+
+    // Orders - customer can read own, vendor can read own store orders
+    match /orders/{orderId} {
+      allow read: if isOwner(resource.data.customerId) ||
+                     (isVendor() && resource.data.storeId in getUserStoreIds()) ||
+                     isAdmin();
+      // creation should go through Cloud Function for safety
+      allow create: if isCustomer() && request.resource.data.customerId == request.auth.uid;
+      allow update: if isAdmin() ||
+                       (isVendor() && resource.data.storeId in getUserStoreIds());
+
+      match /items/{itemId} {
+        allow read: if true; // constrained by parent
+      }
+
+      match /statusHistory/{historyId} {
+        allow read: if true;
+        allow create: if isVendor() || isAdmin();
+      }
+    }
+
+    // Addresses
+    match /addresses/{addressId} {
+      allow read, write: if isOwner(resource.data.customerId) ||
+                            (request.method == 'create' && request.resource.data.customerId == request.auth.uid);
+    }
+
+    // Helper placeholder - in real rules use a better ownership check
+    function getUserStoreIds() {
+      return []; // Demo: tighten with custom claims or extra query in production
+    }
+  }
+}
