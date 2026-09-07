@@ -12,72 +12,67 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "demo",
 };
 
-let app: FirebaseApp;
-let auth: Auth;
-let db: Firestore;
-let storage: FirebaseStorage;
+let _app: FirebaseApp | null = null;
+let _auth: Auth | null = null;
+let _db: Firestore | null = null;
+let _storage: FirebaseStorage | null = null;
 
 function getFirebaseApp() {
-  if (!app) {
-    app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+  if (!_app) {
+    _app = getApps().length ? getApp() : initializeApp(firebaseConfig);
   }
-  return app;
+  return _app;
 }
 
 export function getClientAuth() {
-  if (!auth) {
-    auth = getAuth(getFirebaseApp());
+  if (!_auth) {
+    _auth = getAuth(getFirebaseApp());
     if (
       typeof window !== "undefined" &&
       process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === "true"
     ) {
       try {
-        connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
+        connectAuthEmulator(_auth, "http://127.0.0.1:9099", { disableWarnings: true });
       } catch {
         // already connected
       }
     }
   }
-  return auth;
+  return _auth;
 }
 
 export function getClientDb() {
-  if (!db) {
-    db = getFirestore(getFirebaseApp());
+  if (!_db) {
+    _db = getFirestore(getFirebaseApp());
     if (
       typeof window !== "undefined" &&
       process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === "true"
     ) {
       try {
-        connectFirestoreEmulator(db, "127.0.0.1", 8080);
+        connectFirestoreEmulator(_db, "127.0.0.1", 8080);
       } catch {
         // already connected
       }
     }
   }
-  return db;
+  return _db;
 }
 
 export function getClientStorage() {
-  if (!storage) {
-    storage = getStorage(getFirebaseApp());
+  if (!_storage) {
+    _storage = getStorage(getFirebaseApp());
     if (
       typeof window !== "undefined" &&
       process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === "true"
     ) {
       try {
-        connectStorageEmulator(storage, "127.0.0.1", 9199);
+        connectStorageEmulator(_storage, "127.0.0.1", 9199);
       } catch {
         // already connected
       }
     }
   }
-  return storage;
+  return _storage;
 }
-
-// Backwards-compatible exports (lazy)
-export const auth = typeof window !== "undefined" ? getClientAuth() : (null as any);
-export const db = typeof window !== "undefined" ? getClientDb() : (null as any);
-export const storage = typeof window !== "undefined" ? getClientStorage() : (null as any);
 
 export default getFirebaseApp;
