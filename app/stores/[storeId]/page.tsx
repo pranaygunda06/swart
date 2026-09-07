@@ -1,15 +1,12 @@
 "use client";
 
-import { use } from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { ArrowLeft, Store, Clock, MapPin } from "lucide-react";
 
-export default function StorePage({
-  params,
-}: {
-  params: Promise<{ storeId: string }>;
-}) {
-  const { storeId } = use(params);
+export default function StorePage() {
+  const params = useParams();
+  const storeId = params?.storeId as string;
 
   return (
     <div className="min-h-screen bg-gray-50 pb-8">
@@ -23,7 +20,6 @@ export default function StorePage({
       </header>
 
       <div className="max-w-lg mx-auto">
-        {/* Store header */}
         <div className="bg-white p-4 border-b">
           <div className="flex gap-3">
             <div className="w-16 h-16 rounded-xl bg-swart-100 flex items-center justify-center shrink-0">
@@ -52,7 +48,6 @@ export default function StorePage({
           </div>
         </div>
 
-        {/* Products placeholder */}
         <div className="p-4">
           <h3 className="font-semibold mb-3">Products</h3>
           <div className="grid grid-cols-2 gap-3">
