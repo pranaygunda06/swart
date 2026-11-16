@@ -12,19 +12,20 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleLogin(e: React.FormEvent) {
+  function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    // Demo mode - just navigate
+
+    // Pure demo mode - no Firebase
     setTimeout(() => {
-      toast.success("Logged in (demo)");
-      router.push("/home");
+      toast.success("Welcome back (demo)");
+      router.push("/");
       setLoading(false);
-    }, 800);
+    }, 600);
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-green-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border p-8">
         <div className="flex justify-center mb-6">
           <div className="w-12 h-12 rounded-xl bg-green-600 flex items-center justify-center">
@@ -36,31 +37,31 @@ export default function LoginPage() {
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Email</label>
+            <label className="block text-sm font-medium mb-1.5">Email</label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3.5 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               placeholder="you@example.com"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Password</label>
+            <label className="block text-sm font-medium mb-1.5">Password</label>
             <input
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3.5 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               placeholder="••••••••"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2.5 rounded-lg bg-green-600 text-white font-medium hover:bg-green-700 disabled:opacity-50"
+            className="w-full py-3 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700 disabled:opacity-50 transition"
           >
             {loading ? "Signing in..." : "Log in"}
           </button>
@@ -75,7 +76,7 @@ export default function LoginPage() {
 
         <div className="mt-4 text-center">
           <Link href="/" className="text-xs text-gray-400 hover:underline">
-            ← Back to home
+            ← Back to shopping
           </Link>
         </div>
       </div>

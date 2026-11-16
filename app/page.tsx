@@ -1,95 +1,160 @@
-import Link from "next/link";
-import { ShoppingBag, Store, Truck, Shield } from "lucide-react";
+"use client";
 
-export default function LandingPage() {
+import Link from "next/link";
+import {
+  Search,
+  ShoppingBag,
+  MapPin,
+  Store,
+  Clock,
+  Heart,
+  User,
+} from "lucide-react";
+
+export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
-      <header className="border-b bg-white/80 backdrop-blur sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-xl bg-green-600 flex items-center justify-center">
-              <ShoppingBag className="w-5 h-5 text-white" />
+    <div className="min-h-screen bg-gray-50 pb-20">
+      {/* Header */}
+      <header className="bg-white border-b sticky top-0 z-40">
+        <div className="max-w-lg mx-auto px-4 py-3 flex items-center gap-3">
+          <div className="flex-1">
+            <div className="flex items-center gap-1 text-xs text-gray-500 mb-0.5">
+              <MapPin className="w-3 h-3" />
+              <span>Deliver to</span>
             </div>
-            <span className="font-bold text-xl tracking-tight">SWART</span>
+            <p className="text-sm font-semibold truncate">Hyderabad · Set location</p>
           </div>
-          <div className="flex items-center gap-3">
-            <Link
-              href="/auth/login"
-              className="text-sm font-medium text-gray-700 hover:text-green-700"
-            >
-              Log in
-            </Link>
-            <Link
-              href="/auth/signup"
-              className="px-4 py-2 rounded-lg bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition"
-            >
-              Sign up
-            </Link>
-          </div>
+          <Link href="/auth/login" className="p-2 rounded-full hover:bg-gray-100">
+            <User className="w-5 h-5 text-gray-600" />
+          </Link>
+        </div>
+
+        <div className="px-4 pb-3">
+          <Link href="/search" className="relative block">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <div className="w-full pl-10 pr-4 py-2.5 bg-gray-100 rounded-xl text-sm text-gray-500">
+              Search products, stores...
+            </div>
+          </Link>
         </div>
       </header>
 
-      <section className="max-w-6xl mx-auto px-4 pt-16 pb-20 text-center">
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 mb-4">
-          Your neighborhood Kirana,
-          <br />
-          <span className="text-green-600">now digital</span>
-        </h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-          Discover local stores, compare prices, get quick or scheduled delivery.
-          Retailers stay in full control of their prices, stock and delivery.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link
-            href="/auth/signup"
-            className="px-6 py-3 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700 transition"
-          >
-            Start Shopping
-          </Link>
-          <Link
-            href="/auth/signup?role=vendor"
-            className="px-6 py-3 rounded-xl border-2 border-green-600 text-green-700 font-semibold hover:bg-green-50 transition"
-          >
-            Sell on SWART
-          </Link>
-        </div>
-      </section>
+      <main className="max-w-lg mx-auto px-4 py-4 space-y-6">
+        {/* Categories */}
+        <section>
+          <h2 className="font-semibold mb-3">Categories</h2>
+          <div className="grid grid-cols-4 gap-3">
+            {[
+              { name: "Groceries", emoji: "🛒" },
+              { name: "Dairy", emoji: "🥛" },
+              { name: "Snacks", emoji: "🍪" },
+              { name: "Personal", emoji: "🧴" },
+            ].map((cat) => (
+              <div
+                key={cat.name}
+                className="bg-white rounded-xl p-3 text-center border shadow-sm active:scale-95 transition"
+              >
+                <div className="text-2xl mb-1">{cat.emoji}</div>
+                <span className="text-xs font-medium">{cat.name}</span>
+              </div>
+            ))}
+          </div>
+        </section>
 
-      <section className="max-w-6xl mx-auto px-4 pb-24">
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-2xl p-6 shadow-sm border">
-            <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center mb-4">
-              <Store className="w-6 h-6 text-green-600" />
-            </div>
-            <h3 className="font-semibold text-lg mb-2">Local Stores</h3>
-            <p className="text-gray-600 text-sm">
-              Shop from independent Kirana stores near you. Support your neighborhood.
-            </p>
+        {/* Nearby Stores */}
+        <section>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-semibold">Nearby Stores</h2>
+            <span className="text-sm text-green-600 font-medium">See all</span>
           </div>
-          <div className="bg-white rounded-2xl p-6 shadow-sm border">
-            <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center mb-4">
-              <Truck className="w-6 h-6 text-green-600" />
-            </div>
-            <h3 className="font-semibold text-lg mb-2">Quick or Scheduled</h3>
-            <p className="text-gray-600 text-sm">
-              Under 30 min delivery when available, or schedule up to a week ahead.
-            </p>
+          <div className="space-y-3">
+            {[
+              { id: 1, name: "Sharma Kirana", distance: "0.3 km", open: true },
+              { id: 2, name: "Fresh Mart", distance: "0.6 km", open: true },
+              { id: 3, name: "Daily Needs Store", distance: "0.9 km", open: true },
+            ].map((store) => (
+              <Link
+                key={store.id}
+                href={`/stores/demo-store-${store.id}`}
+                className="flex gap-3 bg-white rounded-xl p-3 border shadow-sm active:scale-[0.98] transition"
+              >
+                <div className="w-16 h-16 rounded-lg bg-green-100 flex items-center justify-center shrink-0">
+                  <Store className="w-7 h-7 text-green-600" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-medium truncate">{store.name}</h3>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    {store.distance} · Open now
+                  </p>
+                  <div className="flex items-center gap-2 mt-1.5">
+                    <span className="text-xs bg-green-50 text-green-700 px-1.5 py-0.5 rounded font-medium">
+                      Quick Delivery
+                    </span>
+                    <span className="text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">
+                      Scheduled
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
           </div>
-          <div className="bg-white rounded-2xl p-6 shadow-sm border">
-            <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center mb-4">
-              <Shield className="w-6 h-6 text-green-600" />
-            </div>
-            <h3 className="font-semibold text-lg mb-2">Retailer Controlled</h3>
-            <p className="text-gray-600 text-sm">
-              Stores set their own prices, inventory, delivery fees and hours.
-            </p>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <footer className="border-t py-8 text-center text-sm text-gray-500">
-        SWART Demo · Built with Next.js + Firebase
-      </footer>
+        {/* Popular Products */}
+        <section>
+          <h2 className="font-semibold mb-3">Popular near you</h2>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { name: "Amul Taaza 1L", price: 58 },
+              { name: "Britannia Bread", price: 45 },
+              { name: "Tata Salt 1kg", price: 28 },
+              { name: "Fortune Oil 1L", price: 165 },
+            ].map((item) => (
+              <div
+                key={item.name}
+                className="bg-white rounded-xl p-3 border shadow-sm"
+              >
+                <div className="aspect-square rounded-lg bg-gray-100 mb-2 flex items-center justify-center text-3xl">
+                  📦
+                </div>
+                <p className="text-sm font-medium truncate">{item.name}</p>
+                <p className="text-sm font-semibold text-green-700 mt-0.5">
+                  ₹{item.price}
+                </p>
+                <button className="mt-2 w-full py-1.5 text-xs font-medium rounded-lg border border-green-600 text-green-700 hover:bg-green-50">
+                  Add
+                </button>
+              </div>
+            ))}
+          </div>
+        </section>
+      </main>
+
+      {/* Bottom Nav */}
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t safe-bottom">
+        <div className="max-w-lg mx-auto flex">
+          {[
+            { icon: Store, label: "Home", href: "/" },
+            { icon: Search, label: "Search", href: "/search" },
+            { icon: ShoppingBag, label: "Cart", href: "/cart" },
+            { icon: Clock, label: "Orders", href: "/orders" },
+            { icon: Heart, label: "Saved", href: "/saved" },
+          ].map(({ icon: Icon, label, href }) => (
+            <Link
+              key={label}
+              href={href}
+              className={`flex-1 flex flex-col items-center py-2 text-xs ${
+                href === "/"
+                  ? "text-green-600 font-medium"
+                  : "text-gray-500 hover:text-green-600"
+              }`}
+            >
+              <Icon className="w-5 h-5 mb-0.5" />
+              {label}
+            </Link>
+          ))}
+        </div>
+      </nav>
     </div>
   );
 }

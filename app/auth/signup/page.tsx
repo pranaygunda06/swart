@@ -17,18 +17,20 @@ function SignupForm() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleSignup(e: React.FormEvent) {
+  function handleSignup(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
+
+    // Pure demo mode - no Firebase call
     setTimeout(() => {
       toast.success("Account created (demo)");
-      router.push(role === "vendor" ? "/vendor" : "/home");
+      router.push(role === "vendor" ? "/vendor" : "/");
       setLoading(false);
-    }, 800);
+    }, 600);
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-green-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border p-8">
         <div className="flex justify-center mb-6">
           <div className="w-12 h-12 rounded-xl bg-green-600 flex items-center justify-center">
@@ -42,10 +44,10 @@ function SignupForm() {
           <button
             type="button"
             onClick={() => setRole("customer")}
-            className={`flex-1 py-2 rounded-lg text-sm font-medium border ${
+            className={`flex-1 py-2.5 rounded-lg text-sm font-medium border transition ${
               role === "customer"
                 ? "bg-green-600 text-white border-green-600"
-                : "bg-white text-gray-700"
+                : "bg-white text-gray-700 border-gray-200"
             }`}
           >
             Customer
@@ -53,10 +55,10 @@ function SignupForm() {
           <button
             type="button"
             onClick={() => setRole("vendor")}
-            className={`flex-1 py-2 rounded-lg text-sm font-medium border ${
+            className={`flex-1 py-2.5 rounded-lg text-sm font-medium border transition ${
               role === "vendor"
                 ? "bg-green-600 text-white border-green-600"
-                : "bg-white text-gray-700"
+                : "bg-white text-gray-700 border-gray-200"
             }`}
           >
             Vendor / Store
@@ -65,7 +67,7 @@ function SignupForm() {
 
         <form onSubmit={handleSignup} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1">
+            <label className="block text-sm font-medium mb-1.5">
               {role === "vendor" ? "Owner Name" : "Full Name"}
             </label>
             <input
@@ -73,34 +75,37 @@ function SignupForm() {
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3.5 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Your name"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Email</label>
+            <label className="block text-sm font-medium mb-1.5">Email</label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3.5 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="you@example.com"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Password</label>
+            <label className="block text-sm font-medium mb-1.5">Password</label>
             <input
               type="password"
               required
               minLength={6}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3.5 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="••••••••"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2.5 rounded-lg bg-green-600 text-white font-medium hover:bg-green-700 disabled:opacity-50"
+            className="w-full py-3 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700 disabled:opacity-50 transition"
           >
             {loading ? "Creating..." : "Create account"}
           </button>
