@@ -1,30 +1,34 @@
-# SWART — Hyperlocal Kirana Commerce Platform
+# SWART — Hyperlocal Kirana Commerce
 
-**Demo version** of the full SWART product specification.
+Shop-first platform for independent neighborhood Kirana stores.
 
-Firebase-powered hyperlocal marketplace for independent neighborhood Kirana stores.
+## Product rules
+
+- **Shop pages first** — customers enter a specific shop to browse its products
+- **One vendor = one store** — shop name is the vendor identity
+- **Hard isolation** — vendors only see their own products & orders
+- **Auth required** for checkout / placing orders
+- **No admin button** on customer UI
+- **Store location** via lat/lng (map pin next)
 
 ## Stack
 
-- **Frontend**: Next.js 14 + TypeScript + Tailwind
-- **Backend**: Firebase Auth, Firestore, Storage
-- **Auth**: Email/Password (Phone OTP ready)
-- **Payments**: Razorpay-ready abstraction
-- **Search**: Provider abstraction
+- Next.js 14 + TypeScript + Tailwind + Framer Motion
+- Firebase Auth / Firestore ready
+- Demo auth via localStorage for now
 
-## Quick Start
+## Quick start
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open http://localhost:3000
+## Demo login
 
-## Deployed on Vercel
+- **Customer**: any email + password → checkout enabled
+- **Vendor**: `ramesh@sharma.com` (or other vendor emails) → only that shop’s data
 
-Project: **traws**
+## Deploy
 
----
-
-Built according to the official SWART specification pack.
+Vercel project linked to this repo.

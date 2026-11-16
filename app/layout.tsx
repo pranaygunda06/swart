@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "SWART — Hyperlocal Kirana",
-  description: "Shop from neighborhood Kirana stores. Fast delivery, local prices.",
+  description: "Shop from your neighborhood Kirana. One shop at a time.",
 };
 
 export default function RootLayout({
@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         {children}
-        <Toaster position="top-center" />
+        <Toaster position="top-center" toastOptions={{ className: "text-sm font-medium" }} />
       </body>
     </html>
   );
