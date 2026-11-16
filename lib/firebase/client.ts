@@ -1,3 +1,5 @@
+"use client";
+
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
@@ -12,7 +14,14 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:123456789:web:abc",
 };
 
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+function createFirebaseApp() {
+  if (getApps().length === 0) {
+    return initializeApp(firebaseConfig);
+  }
+  return getApp();
+}
+
+const app = createFirebaseApp();
 
 export const auth = getAuth(app);
 export const db = getFirestore(app);
