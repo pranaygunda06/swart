@@ -1,17 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { getClientAuth } from "@/lib/firebase/client";
-import { useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Package,
   ShoppingCart,
   Settings,
   Store,
-  LogOut,
   Truck,
   BarChart3,
 } from "lucide-react";
@@ -27,32 +22,12 @@ const nav = [
 ];
 
 export default function VendorDashboard() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const auth = getClientAuth();
-    const unsub = onAuthStateChanged(auth, (u) => {
-      if (!u) router.push("/auth/login");
-      setLoading(false);
-    });
-    return () => unsub();
-  }, [router]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        Loading...
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-50 flex">
       <aside className="w-56 bg-white border-r hidden md:flex flex-col">
         <div className="p-4 border-b">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-swart-600 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-green-600 flex items-center justify-center">
               <Store className="w-4 h-4 text-white" />
             </div>
             <span className="font-bold">SWART Vendor</span>
@@ -63,22 +38,13 @@ export default function VendorDashboard() {
             <Link
               key={label}
               href={href}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-swart-50 hover:text-swart-700"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-green-50 hover:text-green-700"
             >
               <Icon className="w-4 h-4" />
               {label}
             </Link>
           ))}
         </nav>
-        <div className="p-3 border-t">
-          <button
-            onClick={() => signOut(getClientAuth())}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 w-full"
-          >
-            <LogOut className="w-4 h-4" />
-            Log out
-          </button>
-        </div>
       </aside>
 
       <main className="flex-1 p-6">
@@ -109,7 +75,7 @@ export default function VendorDashboard() {
           <div className="flex flex-wrap gap-2">
             <Link
               href="/vendor/store"
-              className="px-4 py-2 rounded-lg bg-swart-600 text-white text-sm font-medium"
+              className="px-4 py-2 rounded-lg bg-green-600 text-white text-sm font-medium"
             >
               Set up store
             </Link>

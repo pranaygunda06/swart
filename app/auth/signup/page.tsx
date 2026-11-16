@@ -3,11 +3,8 @@
 import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
-import { getClientAuth, getClientDb } from "@/lib/firebase/client";
-import toast from "react-hot-toast";
 import { ShoppingBag } from "lucide-react";
+import toast from "react-hot-toast";
 
 function SignupForm() {
   const router = useRouter();
@@ -23,50 +20,18 @@ function SignupForm() {
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    try {
-      const auth = getClientAuth();
-      const db = getClientDb();
-      const cred = await createUserWithEmailAndPassword(auth, email, password);
-      const uid = cred.user.uid;
-
-      await setDoc(doc(db, "users", uid), {
-        role,
-        email,
-        status: "active",
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      });
-
-      if (role === "customer") {
-        await setDoc(doc(db, "customerProfiles", uid), {
-          name,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
-        });
-        toast.success("Account created!");
-        router.push("/home");
-      } else {
-        await setDoc(doc(db, "vendorProfiles", uid), {
-          ownerName: name,
-          verificationStatus: "pending",
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
-        });
-        toast.success("Vendor account created!");
-        router.push("/vendor");
-      }
-    } catch (err: any) {
-      toast.error(err.message || "Signup failed");
-    } finally {
+    setTimeout(() => {
+      toast.success("Account created (demo)");
+      router.push(role === "vendor" ? "/vendor" : "/home");
       setLoading(false);
-    }
+    }, 800);
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-swart-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-green-50 px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border p-8">
         <div className="flex justify-center mb-6">
-          <div className="w-12 h-12 rounded-xl bg-swart-600 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-xl bg-green-600 flex items-center justify-center">
             <ShoppingBag className="w-6 h-6 text-white" />
           </div>
         </div>
@@ -79,7 +44,7 @@ function SignupForm() {
             onClick={() => setRole("customer")}
             className={`flex-1 py-2 rounded-lg text-sm font-medium border ${
               role === "customer"
-                ? "bg-swart-600 text-white border-swart-600"
+                ? "bg-green-600 text-white border-green-600"
                 : "bg-white text-gray-700"
             }`}
           >
@@ -90,7 +55,7 @@ function SignupForm() {
             onClick={() => setRole("vendor")}
             className={`flex-1 py-2 rounded-lg text-sm font-medium border ${
               role === "vendor"
-                ? "bg-swart-600 text-white border-swart-600"
+                ? "bg-green-600 text-white border-green-600"
                 : "bg-white text-gray-700"
             }`}
           >
@@ -108,7 +73,7 @@ function SignupForm() {
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-swart-500"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
           <div>
@@ -118,7 +83,7 @@ function SignupForm() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-swart-500"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
           <div>
@@ -129,13 +94,13 @@ function SignupForm() {
               minLength={6}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-swart-500"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2.5 rounded-lg bg-swart-600 text-white font-medium hover:bg-swart-700 disabled:opacity-50"
+            className="w-full py-2.5 rounded-lg bg-green-600 text-white font-medium hover:bg-green-700 disabled:opacity-50"
           >
             {loading ? "Creating..." : "Create account"}
           </button>
@@ -143,7 +108,7 @@ function SignupForm() {
 
         <p className="mt-6 text-center text-sm text-gray-500">
           Already have an account?{" "}
-          <Link href="/auth/login" className="text-swart-600 font-medium hover:underline">
+          <Link href="/auth/login" className="text-green-600 font-medium hover:underline">
             Log in
           </Link>
         </p>

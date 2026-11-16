@@ -1,10 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { getClientAuth } from "@/lib/firebase/client";
-import { useRouter } from "next/navigation";
 import {
   Search,
   ShoppingBag,
@@ -16,31 +12,6 @@ import {
 } from "lucide-react";
 
 export default function CustomerHome() {
-  const router = useRouter();
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const auth = getClientAuth();
-    const unsub = onAuthStateChanged(auth, (u) => {
-      if (!u) {
-        router.push("/auth/login");
-      } else {
-        setUser(u);
-      }
-      setLoading(false);
-    });
-    return () => unsub();
-  }, [router]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-swart-600">Loading...</div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       <header className="bg-white border-b sticky top-0 z-40">
@@ -52,12 +23,9 @@ export default function CustomerHome() {
             </div>
             <p className="text-sm font-semibold truncate">Set your location</p>
           </div>
-          <button
-            onClick={() => signOut(getClientAuth())}
-            className="p-2 rounded-full hover:bg-gray-100"
-          >
+          <Link href="/" className="p-2 rounded-full hover:bg-gray-100">
             <User className="w-5 h-5 text-gray-600" />
-          </button>
+          </Link>
         </div>
 
         <div className="px-4 pb-3">
@@ -66,7 +34,7 @@ export default function CustomerHome() {
             <input
               type="text"
               placeholder="Search products, stores..."
-              className="w-full pl-10 pr-4 py-2.5 bg-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-swart-500"
+              className="w-full pl-10 pr-4 py-2.5 bg-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
         </div>
@@ -81,7 +49,7 @@ export default function CustomerHome() {
                 key={cat}
                 className="bg-white rounded-xl p-3 text-center border shadow-sm"
               >
-                <div className="w-10 h-10 mx-auto mb-1 rounded-full bg-swart-100" />
+                <div className="w-10 h-10 mx-auto mb-1 rounded-full bg-green-100" />
                 <span className="text-xs font-medium">{cat}</span>
               </div>
             ))}
@@ -91,9 +59,7 @@ export default function CustomerHome() {
         <section>
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-semibold">Nearby Stores</h2>
-            <Link href="/stores" className="text-sm text-swart-600">
-              See all
-            </Link>
+            <span className="text-sm text-green-600">See all</span>
           </div>
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
@@ -102,14 +68,14 @@ export default function CustomerHome() {
                 href={`/stores/demo-store-${i}`}
                 className="flex gap-3 bg-white rounded-xl p-3 border shadow-sm"
               >
-                <div className="w-16 h-16 rounded-lg bg-swart-100 flex items-center justify-center shrink-0">
-                  <Store className="w-7 h-7 text-swart-600" />
+                <div className="w-16 h-16 rounded-lg bg-green-100 flex items-center justify-center shrink-0">
+                  <Store className="w-7 h-7 text-green-600" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-medium truncate">Demo Kirana Store {i}</h3>
                   <p className="text-xs text-gray-500 mt-0.5">0.{i * 3} km · Open now</p>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs bg-swart-50 text-swart-700 px-1.5 py-0.5 rounded">
+                    <span className="text-xs bg-green-50 text-green-700 px-1.5 py-0.5 rounded">
                       Quick available
                     </span>
                   </div>
@@ -150,7 +116,7 @@ export default function CustomerHome() {
             <Link
               key={label}
               href={href}
-              className="flex-1 flex flex-col items-center py-2 text-xs text-gray-500 hover:text-swart-600"
+              className="flex-1 flex flex-col items-center py-2 text-xs text-gray-500 hover:text-green-600"
             >
               <Icon className="w-5 h-5 mb-0.5" />
               {label}
